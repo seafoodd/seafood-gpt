@@ -49,23 +49,8 @@ const get_response = async (chatId, context, message) => {
       data,
       {
         headers: {
-          Host: "api.puter.com",
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0",
-          "Accept-Language": "en-US,ru-RU;q=0.8,ru;q=0.5,en;q=0.3",
-          "Accept-Encoding": "gzip, deflate, br, zstd",
           Authorization: `Bearer ${GPT_TOKEN}`,
-          "Content-Type": "application/json;charset=UTF-8",
           Origin: "https://docs.puter.com",
-          DNT: "1",
-          "Sec-GPC": "1",
-          Connection: "keep-alive",
-          Referer: "https://docs.puter.com/",
-          "Sec-Fetch-Dest": "empty",
-          "Sec-Fetch-Mode": "cors",
-          "Sec-Fetch-Site": "same-site",
-          Pragma: "no-cache",
-          "Cache-Control": "no-cache",
         },
       },
     );
