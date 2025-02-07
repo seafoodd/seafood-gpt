@@ -1,9 +1,9 @@
 import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
 import { format } from "date-fns";
-import {configDotenv} from "dotenv";
+import { configDotenv } from "dotenv";
 
-configDotenv()
+configDotenv();
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
 const replaceCodeBlocks = (text) => {
@@ -55,16 +55,13 @@ const get_response = async (chatId, context, message) => {
 
     let responseText = response.data?.result?.message?.content;
     if (typeof responseText !== "string") {
-      if (
-        response.data.success === false ||
-        response.status === 401
-      )
+      if (response.data.success === false || response.status === 401)
         return "MONTHLY LIMIT EXCEEDED. CONTACT @seafood_dev TO FIX IT";
       await updateChatHistory(chatId, `[USER]FILTERED REQUEST[USER]`);
       filterCount[chatId] += 1;
-      if(filterCount[chatId] > 3) {
+      if (filterCount[chatId] > 3) {
         userMessageHistory[chatId] = null;
-        return "Too many filtered messages, clearing chat history."
+        return "Too many filtered messages, clearing chat history.";
       }
       return "*Filtered*";
     }
@@ -80,7 +77,12 @@ const get_response = async (chatId, context, message) => {
 
 bot.onText(/^\/start$/, async (msg) => {
   const chatId = msg.chat.id;
-  await bot.sendMessage(chatId, "Welcome! I am your bot. How can I help you?");
+  await bot.sendMessage(
+    chatId,
+    "🇬🇧 Hello! I am SeafoodGPT, your assistant on Telegram. I'm here to answer your questions and help with information. Just type your question, and let's start chatting!\n" +
+      "\n" +
+      "🇷🇺 Привет! Я — SeafoodGPT, твой помощник в Telegram. Я здесь, чтобы отвечать на твои вопросы и помогать с информацией. Просто напиши свой вопрос, и давай общаться!\n",
+  );
 });
 
 bot.onText(/^\/clear$/, async (msg) => {
@@ -116,7 +118,7 @@ bot.on("message", async (msg) => {
     debugLog(msg.from.username, dateString, message, response);
     if (response.error) {
       await bot.sendMessage(chatId, response.error);
-      return
+      return;
     }
     await bot.sendMessage(chatId, response, { parse_mode: "HTML" });
   } catch (e) {
