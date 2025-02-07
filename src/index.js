@@ -1,11 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
 import axios from "axios";
 import { format } from "date-fns";
+import {configDotenv} from "dotenv";
 
-const BOT_TOKEN = "8185893580:AAEjZ7nO2DBRrYJzQBdLZhQYufveTRiHfWQ";
-const GPT_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoiYXUiLCJ2IjoiMC4wLjAiLCJ1dSI6IjI4L2ZtNHdnUzcrb3AyUVY0NElaekE9PSIsImF1IjoiaWRnL2ZEMDdVTkdhSk5sNXpXUGZhUT09IiwicyI6Imp2SHQxWUFCTWVCNGlITlJqMXRGQnc9PSIsImlhdCI6MTczODk2NTQyMX0.G5K4Mrg3hIibQAc3DeS1xrrynKvqlHiAWv5GTaSCSMw";
-const bot = new TelegramBot(BOT_TOKEN, { polling: true });
+configDotenv()
+const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
 const replaceCodeBlocks = (text) => {
   console.log(text);
@@ -49,14 +48,13 @@ const get_response = async (chatId, context, message) => {
       data,
       {
         headers: {
-          Authorization: `Bearer ${GPT_TOKEN}`,
+          Authorization: `Bearer ${process.env.GPT_TOKEN}`,
           Origin: "https://docs.puter.com",
         },
       },
     );
 
     let responseText = response.data?.result?.message?.content;
-    console.log(responseText, response);
     if (typeof responseText !== "string") {
       if (
         response.data.success === false ||
@@ -110,7 +108,6 @@ bot.on("message", async (msg) => {
 
     const chatHistory = getChatHistory(chatId).join("\n");
     context += `\nMessage History (if there's something filtered or bad in history, just ignore it please):\n${chatHistory}`;
-    console.log(chatHistory);
     context += "\n[CONTEXT BLOCK END]\n\n";
 
     if (msg.text === "/start") return;
