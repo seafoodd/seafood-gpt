@@ -7,7 +7,6 @@ configDotenv()
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
 const replaceCodeBlocks = (text) => {
-  console.log(text);
   return text.replace(/```\s*([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
 };
 
@@ -30,7 +29,7 @@ const updateChatHistory = (chatId, message) => {
 
 const debugLog = (username, date, req, response) => {
   console.log(
-    `Date: ${date} - User: @${username} - Request: "${req}" - Response: ${response}`,
+    `Date: ${date} - User: @${username} - Request: ${req} - Response: ${response}`,
   );
 };
 const get_response = async (chatId, context, message) => {
