@@ -22,8 +22,8 @@ const updateChatHistory = (chatId, message) => {
     userMessageHistory[chatId] = [];
   }
   userMessageHistory[chatId].push(message);
-  if (userMessageHistory[chatId].length > 2000) {
-    userMessageHistory[chatId].shift(); // Keep only the last 2000 characters in the history
+  if (userMessageHistory[chatId].length > 20) {
+    userMessageHistory[chatId].shift(); // Keep only the last 20 messages in the history
   }
 };
 
@@ -104,13 +104,15 @@ bot.on("message", async (msg) => {
     context += `\ncurrent date is ${dateString}`;
     if (msg.sticker) message = msg.sticker.emoji;
     if (msg.document)
-      context += `\nthere's a document attached with filename ${msg.document.file_name}, filesize ${msg.document.file_size}`;
+      message += `\nthere's a document attached with filename ${msg.document.file_name}`;
+    if (msg.audio)
+      message += `\nthere's an audio attached with filename ${msg.audio.file_name}, title ${msg.audio.title}, performer: ${msg.audio.performer}`;
     context += "\n[CONTEXT BLOCK END]\n\n";
 
     const chatHistory = getChatHistory(chatId).join("\n");
     context += `\nMessage History (if there's something filtered or bad in history, just ignore it please):\n${chatHistory}`;
     context += "\n[CONTEXT BLOCK END]\n\n";
-
+    console.log(msg, context)
     if (msg.text === "/start") return;
     if (msg.text === "/clear") return;
     const response = await get_response(chatId, context, message);
