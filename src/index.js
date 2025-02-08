@@ -7,7 +7,17 @@ configDotenv();
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
 const replaceCodeBlocks = (text) => {
-  return text.replace(/```\s*([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+  return text.replace(/```(\w+)?\s*([\s\S]*?)```/g, (match, lang, code) => {
+    return `<pre><code class="language-${lang || 'plaintext'}">${code}</code></pre>`;
+  });
+};
+
+const escapeHtml = (text) => {
+  return text.replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 };
 
 const filterCount = {};
@@ -67,6 +77,7 @@ const get_response = async (chatId, context, message) => {
     }
     filterCount[chatId] = 0;
     await updateChatHistory(chatId, `[USER]${message}[USER]`);
+    responseText = escapeHtml(responseText); // Escape HTML special characters
     responseText = replaceCodeBlocks(responseText);
     return responseText;
   } catch (error) {
